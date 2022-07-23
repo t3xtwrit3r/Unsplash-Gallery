@@ -1,4 +1,4 @@
-package com.mubin.unsplashgallery.ui.home
+package com.mubin.unsplashgallery.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -34,6 +34,12 @@ class HomeActivity : AppCompatActivity() {
     private fun initToolbar() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+    }
+
+    fun setToolbarTitle(title: String){
+
+        binding.toolbar.title = title
+
     }
 
 }

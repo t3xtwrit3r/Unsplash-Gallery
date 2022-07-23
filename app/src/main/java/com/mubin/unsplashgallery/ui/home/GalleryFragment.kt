@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.mubin.unsplashgallery.R
 import com.mubin.unsplashgallery.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +45,8 @@ class GalleryFragment : Fragment() {
     }
 
     private fun initViews() {
-        galleryAdapter.setHasStableIds(true)
+
+        //galleryAdapter.setHasStableIds(true)
         with(binding.galleryRv) {
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
@@ -51,6 +55,7 @@ class GalleryFragment : Fragment() {
             animation = null
             itemAnimator = null
         }
+
         binding.galleryRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -60,6 +65,15 @@ class GalleryFragment : Fragment() {
                 }
             }
         })
+
+        galleryAdapter.onItemClick = { photoData, position ->
+
+            val bundle = bundleOf("photoLink" to photoData.urls?.regular, "authorName" to photoData.user?.name)
+
+            findNavController().navigate(R.id.action_galleryFragment_to_viewPhotoFragment, bundle)
+
+        }
+
     }
 
     private fun initData() {

@@ -10,7 +10,17 @@
         android:id="@+id/galleryFragment"
         android:name="com.mubin.unsplashgallery.ui.home.GalleryFragment"
         android:label="Unsplash Gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_viewPhotoFragment"
+            app:destination="@id/viewPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewPhotoFragment"
+        android:name="com.mubin.unsplashgallery.ui.viewPhoto.ViewPhotoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_view_photo" >
+    </fragment>
 
 
 </navigation>

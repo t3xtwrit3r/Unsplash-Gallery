@@ -3,15 +3,16 @@ package com.mubin.unsplashgallery.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mubin.unsplashgallery.api.models.bindingModel.PhotoLinkAuthor
 import com.mubin.unsplashgallery.api.models.responseModel.UnsplashPhotoItem
 import com.mubin.unsplashgallery.databinding.ItemGalleyBinding
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 
 
 class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val dataList: MutableList<UnsplashPhotoItem> = mutableListOf()
+
+    var onItemClick: ((model:UnsplashPhotoItem, position: Int) -> Unit)? = null
 
     override fun getItemCount(): Int = dataList.size
 
@@ -31,17 +32,15 @@ class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         fun bind(photoData: UnsplashPhotoItem) {
             try {
-                binding.photoIv.alpha = 0f
-                Picasso.get().load(photoData.urls?.small).noFade().into(binding.photoIv, object: Callback {
-                    override fun onSuccess() {
-                        binding.photoIv.animate().setDuration(300).alpha(1f).start()
-                    }
 
-                    override fun onError(e: java.lang.Exception?) {
+                binding.photoDetails = PhotoLinkAuthor(photoData.urls?.small!!, photoData.user?.name!!)
 
-                    }
+                binding.root.setOnClickListener {
 
-                })
+                    onItemClick?.invoke(photoData, adapterPosition)
+
+                }
+
             } catch (ignored: Exception) {
 
             }
@@ -53,14 +52,13 @@ class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun initLoad(list: List<UnsplashPhotoItem>){
         dataList.clear()
         dataList.addAll(list)
-        notifyDataSetChanged()
+        notifyItemInserted(0)
     }
 
     fun pagingLoad(list: List<UnsplashPhotoItem>) {
         val currentIndex = dataList.size
-        val newDataCount = list.size
-        dataList.addAll(dataList)
-        notifyItemRangeInserted(currentIndex, newDataCount)
+        dataList.addAll(list)
+        notifyItemInserted(currentIndex)
     }
 
 

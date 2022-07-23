@@ -9,6 +9,6 @@ class AppRepository
 @Inject
 constructor(private val apiServiceUnsplash: ApiServiceUnsplash) {
 
-    suspend fun getPhotos(page: Int) = apiServiceUnsplash.getPhotos(page, 25, "latest", Constants.CLIENT_ID)
+    suspend fun getPhotos(page: Int) = apiServiceUnsplash.getPhotos(page, 20, "popular", Constants.CLIENT_ID)
 
 }
