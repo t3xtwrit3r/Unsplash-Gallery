@@ -10,6 +10,6 @@ import retrofit2.http.Query
 interface ApiServiceUnsplash {
 
     @GET(Constants.END_POINT_GET_PHOTOS)
-    suspend fun getPhotos(@Query("page") page: Int, @Query("client_id") client_id: String): List<UnsplashPhotoItem>
+    suspend fun getPhotos(@Query("page") page: Int, @Query("per_page") perPage: Int, @Query("order_by") orderBy: String, @Query("client_id") client_id: String): NetworkResponse<List<UnsplashPhotoItem>, ErrorResponse>
 
 }

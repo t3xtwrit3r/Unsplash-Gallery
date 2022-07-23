@@ -1,10 +1,10 @@
 package com.mubin.unsplashgallery.api
 
 import android.app.Application
-import androidx.databinding.ktx.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
+import com.mubin.unsplashgallery.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

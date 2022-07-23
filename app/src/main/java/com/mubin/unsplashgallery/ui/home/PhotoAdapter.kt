@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mubin.unsplashgallery.api.models.responseModel.UnsplashPhotoItem
 import com.mubin.unsplashgallery.databinding.ItemGalleyBinding
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 
 
 class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -28,16 +30,37 @@ class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class PhotoViewHolder(private var binding: ItemGalleyBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(photoData: UnsplashPhotoItem) {
+            try {
+                binding.photoIv.alpha = 0f
+                Picasso.get().load(photoData.urls?.small).noFade().into(binding.photoIv, object: Callback {
+                    override fun onSuccess() {
+                        binding.photoIv.animate().setDuration(300).alpha(1f).start()
+                    }
 
+                    override fun onError(e: java.lang.Exception?) {
+
+                    }
+
+                })
+            } catch (ignored: Exception) {
+
+            }
         }
 
     }
 
 
-    fun initLoad(dataList: List<UnsplashPhotoItem>){
-        this.dataList.clear()
-        this.dataList.addAll(dataList)
+    fun initLoad(list: List<UnsplashPhotoItem>){
+        dataList.clear()
+        dataList.addAll(list)
         notifyDataSetChanged()
+    }
+
+    fun pagingLoad(list: List<UnsplashPhotoItem>) {
+        val currentIndex = dataList.size
+        val newDataCount = list.size
+        dataList.addAll(dataList)
+        notifyItemRangeInserted(currentIndex, newDataCount)
     }
 
 
