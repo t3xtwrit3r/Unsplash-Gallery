@@ -31,7 +31,7 @@ object RetrofitUtils {
     @Provides
     @Singleton
     fun createCache(application: Application): Cache{
-        val cacheSize = 10L * 1024L * 1024L //10MB
+        val cacheSize = 5L * 1024L * 1024L //10MB
         return Cache(File(application.cacheDir, "${application.packageName}.cache"), cacheSize)
     }
 
