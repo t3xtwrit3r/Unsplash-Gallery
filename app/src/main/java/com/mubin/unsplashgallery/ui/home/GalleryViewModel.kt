@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.haroldadmin.cnradapter.NetworkResponse
 import com.mubin.unsplashgallery.api.models.responseModel.UnsplashPhotoItem
+import com.mubin.unsplashgallery.helper.GetBitmap
+import com.mubin.unsplashgallery.helper.Session
 import com.mubin.unsplashgallery.repository.AppRepository
 import com.mubin.unsplashgallery.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +26,9 @@ import javax.inject.Inject
 class GalleryViewModel
 @Inject
 constructor(private val repository: AppRepository, application: Application) : BaseViewModel(application) {
+
+    private val _shouldAskPermission = MutableLiveData<Boolean>()
+    val shouldAskPermission: LiveData<Boolean> = _shouldAskPermission
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -60,6 +65,23 @@ constructor(private val repository: AppRepository, application: Application) : B
                 }
             }
         }
+    }
+
+    fun onShareClicked(authorName: String, photoLink: String) {
+
+        _shouldAskPermission.value = false
+
+        val getBitmap = GetBitmap()
+
+        val title = "$authorName+${System.currentTimeMillis()}"
+
+        if (Session.isWrite && Session.isRead) {
+            getBitmap.shareImage(title, photoLink, context)
+        } else {
+            _shouldAskPermission.value = true
+        }
+
+
     }
 
     fun onSaveClicked(authorName: String, photoLink: String) {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.mubin.unsplashgallery.api.models.bindingModel.PhotoLinkAuthor
 import com.mubin.unsplashgallery.databinding.FragmentViewPhotoBinding
 import com.mubin.unsplashgallery.ui.HomeActivity
@@ -47,7 +48,18 @@ class ViewPhotoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        initObserver()
 
+    }
+
+    private fun initObserver() {
+        viewPhotoViewModel.shouldAskPermission.observe(viewLifecycleOwner, Observer { shouldAsk->
+
+            if (shouldAsk){
+                (activity as HomeActivity).askPermission()
+            }
+
+        })
     }
 
     private fun initViews() {
