@@ -68,7 +68,7 @@ class GalleryFragment : Fragment() {
 
         galleryAdapter.onItemClick = { photoData, position ->
 
-            val bundle = bundleOf("photoLink" to photoData.urls?.regular, "authorName" to photoData.user?.name)
+            val bundle = bundleOf("photoLink" to photoData.urls?.regular, "authorName" to photoData.user?.username)
 
             findNavController().navigate(R.id.action_galleryFragment_to_viewPhotoFragment, bundle)
 

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mubin.unsplashgallery.api.models.bindingModel.PhotoLinkAuthor
 import com.mubin.unsplashgallery.databinding.FragmentViewPhotoBinding

@@ -33,7 +33,7 @@ class PhotoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(photoData: UnsplashPhotoItem) {
             try {
 
-                binding.photoDetails = PhotoLinkAuthor(photoData.urls?.small!!, photoData.user?.name!!)
+                binding.photoDetails = PhotoLinkAuthor(photoData.urls?.small!!, photoData.user?.username!!)
 
                 binding.root.setOnClickListener {
 
