@@ -13,6 +13,7 @@ object Session {
 
     private val Is_Write = "isWrite"
     private val Is_Read = "isRead"
+    private val Is_First_Visit = "isFirstVisit"
 
     fun init(@NonNull context: Context) {
         pref = context.getSharedPreferences(Pref_Name, Context.MODE_PRIVATE)
@@ -44,4 +45,13 @@ object Session {
             }
         }
 
+    var isFirstVisit: Boolean
+        get() {
+            return pref.getBoolean(Is_First_Visit, true)
+        }
+        set(value) {
+            pref.edit {
+                putBoolean(Is_First_Visit, value)
+            }
+        }
 }

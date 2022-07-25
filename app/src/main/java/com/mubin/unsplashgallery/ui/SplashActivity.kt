@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.mubin.unsplashgallery.databinding.ActivitySplashBinding
+import com.mubin.unsplashgallery.helper.Session
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -29,12 +30,19 @@ class SplashActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Handler(Looper.getMainLooper()).postDelayed({
-            checkConnectivity()
+            if (Session.isFirstVisit){
+                checkConnectivity()
+            } else {
+                startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
+                finish()
+            }
+
         }, 1000)
     }
 
     private fun checkConnectivity() {
         if (isNetworkAvailable(applicationContext)){
+            Session.isFirstVisit = false
             startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
             finish()
         } else {
