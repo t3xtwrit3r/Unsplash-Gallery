@@ -11,3 +11,11 @@ I have used Glide library's automatic Diskcache Strategy to cache an Image data 
 I also could add some extra features like offline Data sync using Room local database and a periodic Work Manager. 
 the periodic Work Manager will fetch some pages each day at a particular time and store them to local database accordingly. user will view the gallery from local storage. 
 Another feature could be saving Images as Favourite into Room local database and view them later from a Favourite section.
+
+//P:S: Couldn't solve this problem:
+
+The AbstractCompile.destinationDir property has been deprecated. This is scheduled to be removed in Gradle 8.0. Please use the destinationDirectory property instead. Consult the upgrading guide for further information: https://docs.gradle.org/7.3.3/userguide/upgrading_version_7.html#compile_task_wiring
+at org.gradle.api.tasks.compile.AbstractCompile.setDestinationDir(AbstractCompile.java:113)
+at org.gradle.api.tasks.compile.JavaCompile_Decorated.setDestinationDir(Unknown Source)
+at dagger.hilt.android.plugin.HiltGradlePlugin$configureVariantAggregatingTask$componentsJavaCompileTask$1.execute(HiltGradlePlugin.kt:390)
+at dagger.hilt.android.plugin.HiltGradlePlugin$configureVariantAggregatingTask$componentsJavaCompileTask$1.execute(HiltGradlePlugin.kt:56)
