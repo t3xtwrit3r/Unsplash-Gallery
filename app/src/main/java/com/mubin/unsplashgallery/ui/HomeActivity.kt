@@ -2,10 +2,13 @@ package com.mubin.unsplashgallery.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -28,7 +31,11 @@ class HomeActivity : AppCompatActivity(), HomeCommunicator {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isCheckPermission()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            isCheckPermission()
+        } else {
+            isCheckPermissionBelow23()
+        }
         initNavGraph()
         initToolbar()
 
@@ -51,8 +58,24 @@ class HomeActivity : AppCompatActivity(), HomeCommunicator {
 
     override fun askPermission() {
 
-        isCheckPermission()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            isCheckPermission()
+        } else {
+            isCheckPermissionBelow23()
+        }
 
+    }
+
+    private fun isCheckPermissionBelow23() {
+        val permissionRead = PermissionChecker.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val permissionWrite = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        if (permissionRead == PermissionChecker.PERMISSION_GRANTED && permissionWrite == PermissionChecker.PERMISSION_GRANTED) {
+            Session.isRead = true
+            Session.isWrite = true
+        } else {
+            Toast.makeText(this, "Storage Permission is needed.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun isCheckPermission(): Boolean {
