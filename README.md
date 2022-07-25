@@ -12,7 +12,7 @@ I also could add some extra features like offline Data sync using Room local dat
 the periodic Work Manager will fetch some pages each day at a particular time and store them to local database accordingly. user will view the gallery from local storage. 
 Another feature could be saving Images as Favourite into Room local database and view them later from a Favourite section.
 
-//P:S: Couldn't solve this problem:
+//P:S: Couldn't solve this problem: (I am using gradle 7.2.0)
 
 The AbstractCompile.destinationDir property has been deprecated. This is scheduled to be removed in Gradle 8.0. Please use the destinationDirectory property instead. Consult the upgrading guide for further information: https://docs.gradle.org/7.3.3/userguide/upgrading_version_7.html#compile_task_wiring
 at org.gradle.api.tasks.compile.AbstractCompile.setDestinationDir(AbstractCompile.java:113)
