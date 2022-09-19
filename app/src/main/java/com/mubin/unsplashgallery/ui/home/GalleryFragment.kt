@@ -1,7 +1,9 @@
 package com.mubin.unsplashgallery.ui.home
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -12,20 +14,34 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.fondesa.kpermissions.*
+import com.fondesa.kpermissions.extension.permissionsBuilder
+import com.fondesa.kpermissions.extension.send
 import com.mubin.unsplashgallery.R
 import com.mubin.unsplashgallery.databinding.FragmentGalleryBinding
+import com.mubin.unsplashgallery.helper.motion_detection.MotionDetector
+import com.mubin.unsplashgallery.helper.motion_detection.MotionDetectorCallback
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentGalleryBinding
 
+    private lateinit var motionDetector: MotionDetector
+
     private val galleryViewModel: GalleryViewModel by viewModels()
 
     private var galleryAdapter = PhotoAdapter()
 
     private var currentPage = 1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +63,18 @@ class GalleryFragment : Fragment() {
     private fun initViews() {
 
         //galleryAdapter.setHasStableIds(true)
+        val surfaceView = view?.findViewById<SurfaceView>(R.id.surfaceView)
+        motionDetector = MotionDetector(requireContext(),surfaceView)
+        motionDetector.setMotionDetectorCallback(object : MotionDetectorCallback {
+            override fun onMotionDetected() {
+                Toast.makeText(context, "Hello Nore", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onTooDark() {
+                Toast.makeText(context, "Hello Nore", Toast.LENGTH_SHORT).show()
+            }
+        })
+
         with(binding.galleryRv) {
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
@@ -92,6 +120,17 @@ class GalleryFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        motionDetector.onResume();
+
+        if (motionDetector.checkCameraHardware()) {
+            Toast.makeText(context,"Camera found", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context,"No camera available", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

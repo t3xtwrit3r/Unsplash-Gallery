@@ -101,4 +101,6 @@ dependencies {
     //ZoomInZoomOut ImageView
     implementation 'com.github.MikeOrtiz:TouchImageView:3.2.1'
 
+    implementation 'com.github.fondesa:kpermissions:3.1.2'
+
 }
