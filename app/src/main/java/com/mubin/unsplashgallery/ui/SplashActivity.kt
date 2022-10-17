@@ -30,24 +30,17 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        askForPermission()
 
     }
 
     override fun onResume() {
         super.onResume()
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (Session.isFirstVisit){
-                checkConnectivity()
-            } else {
-                startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
-                finish()
-            }
 
-        }, 1000)
     }
 
     private fun checkConnectivity() {
-        if (isNetworkAvailable(applicationContext) && askForPermission()){
+        if (isNetworkAvailable(applicationContext)){
             Session.isFirstVisit = false
             startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
             finish()
@@ -74,24 +67,24 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun askForPermission(): Boolean {
+    private fun askForPermission(){
 
-        permissionsBuilder(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).build()
+        permissionsBuilder(Manifest.permission.CAMERA).build()
             .send { result ->
                 when {
                     result.allGranted() -> {
-                        isGranted = true
+                        startActivity(Intent(this@SplashActivity, HomeActivity::class.java))
+                        finish()
                     }
                     result.allDenied() || result.anyDenied() -> {
-
+                        askForPermission()
                     }
 
                     result.allPermanentlyDenied() || result.anyPermanentlyDenied() -> {
-
+                        askForPermission()
                     }
                 }
             }
-        return isGranted
     }
 
 

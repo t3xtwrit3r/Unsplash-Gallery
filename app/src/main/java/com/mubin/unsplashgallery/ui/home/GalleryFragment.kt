@@ -1,6 +1,7 @@
 package com.mubin.unsplashgallery.ui.home
 
 import android.Manifest
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.SurfaceView
@@ -32,6 +33,8 @@ class GalleryFragment : Fragment() {
 
     private lateinit var motionDetector: MotionDetector
 
+    private var isMinimized: Boolean = false
+
     private val galleryViewModel: GalleryViewModel by viewModels()
 
     private var galleryAdapter = PhotoAdapter()
@@ -57,7 +60,7 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        initData()
+        //initData()
     }
 
     private fun initViews() {
@@ -65,72 +68,86 @@ class GalleryFragment : Fragment() {
         //galleryAdapter.setHasStableIds(true)
         val surfaceView = view?.findViewById<SurfaceView>(R.id.surfaceView)
         motionDetector = MotionDetector(requireContext(),surfaceView)
+        motionDetector.setCheckInterval(1000)
+        motionDetector.setLeniency(60)
+        motionDetector.setMinLuma(1500)
         motionDetector.setMotionDetectorCallback(object : MotionDetectorCallback {
             override fun onMotionDetected() {
-                Toast.makeText(context, "Hello Nore", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(context, "Motion Detected", Toast.LENGTH_SHORT).show()
             }
 
             override fun onTooDark() {
-                Toast.makeText(context, "Hello Nore", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "low light", Toast.LENGTH_SHORT).show()
             }
         })
 
-        with(binding.galleryRv) {
-            setHasFixedSize(true)
-            isNestedScrollingEnabled = false
-            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-            adapter = galleryAdapter
-            animation = null
-            itemAnimator = null
-        }
-
-        binding.galleryRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!binding.galleryRv.canScrollVertically(1)) {
-                    currentPage += 1
-                    galleryViewModel.getPhotoList(currentPage)
-                }
-            }
-        })
-
-        galleryAdapter.onItemClick = { photoData, position ->
-
-            val bundle = bundleOf("photoLink" to photoData.urls?.regular, "authorName" to photoData.user?.username)
-
-            findNavController().navigate(R.id.action_galleryFragment_to_viewPhotoFragment, bundle)
-
-        }
+//        with(binding.galleryRv) {
+//            setHasFixedSize(true)
+//            isNestedScrollingEnabled = false
+//            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+//            adapter = galleryAdapter
+//            animation = null
+//            itemAnimator = null
+//        }
+//
+//        binding.galleryRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if (!binding.galleryRv.canScrollVertically(1)) {
+//                    currentPage += 1
+//                    galleryViewModel.getPhotoList(currentPage)
+//                }
+//            }
+//        })
+//
+//        galleryAdapter.onItemClick = { photoData, position ->
+//
+//            val bundle = bundleOf("photoLink" to photoData.urls?.regular, "authorName" to photoData.user?.username)
+//
+//            findNavController().navigate(R.id.action_galleryFragment_to_viewPhotoFragment, bundle)
+//
+//        }
 
     }
 
-    private fun initData() {
-
-        galleryViewModel.photoList.observe(viewLifecycleOwner, Observer { photoList ->
-
-            if (currentPage == 1){
-                galleryAdapter.initLoad(photoList)
-            } else {
-                galleryAdapter.pagingLoad(photoList)
-            }
-
-        })
-
-        galleryViewModel.errorMessage.observe(viewLifecycleOwner, Observer { message ->
-            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-        })
-
-    }
+//    private fun initData() {
+//
+//        galleryViewModel.photoList.observe(viewLifecycleOwner, Observer { photoList ->
+//
+//            if (currentPage == 1){
+//                galleryAdapter.initLoad(photoList)
+//            } else {
+//                galleryAdapter.pagingLoad(photoList)
+//            }
+//
+//        })
+//
+//        galleryViewModel.errorMessage.observe(viewLifecycleOwner, Observer { message ->
+//            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+//        })
+//
+//    }
 
     override fun onResume() {
         super.onResume()
-        motionDetector.onResume();
-
-        if (motionDetector.checkCameraHardware()) {
-            Toast.makeText(context,"Camera found", Toast.LENGTH_SHORT).show();
+        motionDetector.onResume()
+        if (isMinimized) {
+            Toast.makeText(context,"You Cheated", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context,"No camera available", Toast.LENGTH_SHORT).show();
+            if (motionDetector.checkCameraHardware()) {
+                Toast.makeText(context,"Camera found", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context,"No camera available", Toast.LENGTH_SHORT).show();
+            }
         }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        motionDetector.onPause()
+        isMinimized = true
     }
 
 
